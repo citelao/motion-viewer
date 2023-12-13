@@ -43,10 +43,9 @@ function App() {
     finalCtx.drawImage(videoRef.current!, 0, 0, 500, 500);
     finalCtx.globalAlpha = 1;
 
-
     // Debug
-    finalCtx.fillStyle = 'blue';
-    finalCtx.fillRect(20, 0, 100, 100);
+    // finalCtx.fillStyle = 'blue';
+    // finalCtx.fillRect(20, 0, 100, 100);
 
     // Save the current frame for next iteration
     // https://stackoverflow.com/questions/44218203/how-to-copy-canvas-image-data-to-some-other-variable

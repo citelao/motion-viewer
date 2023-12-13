@@ -10,7 +10,7 @@ function App() {
 
   const [hasStarted, setHasStarted] = React.useState(false);
   const frames = React.useRef<Uint8ClampedArray[]>([]);
-  const delay = 10;
+  const delay = 2;
   const [test, setTest] = React.useState<number>(0);
 
   // const renderFrame = (time: number) => {
@@ -24,23 +24,29 @@ function App() {
     finalCtx.fillStyle = 'red';
     finalCtx.fillRect(0, 0, 100, 100);
 
-    // finalCtx.globalAlpha = 0.25;
-    // finalCtx.drawImage(videoRef.current!, 0, 0);
     // console.log(frames);
     if ((frames.current || []).length > delay)
     {
       // https://stackoverflow.com/questions/39048227/html5-canvas-invert-color-of-pixels
       const data = frames.current[delay];
-      for (var i = 0; i < data.length; i += 1) {
-        if (i % 4 === 3) {
-          data[i] = 20;
-          continue;
-        }
+      for (var i = 0; i < data.length; i += (i % 4 === 2 ? 2 : 1)) {
+        // if (i % 4 === 3) {
+        //   data[i] = 20;
+        //   continue;
+        // }
         data[i] = 255 - data[i];
       }
       finalCtx.putImageData(new ImageData(frames.current[delay], 500, 500), 0, 0);
     }
-    // finalCtx.globalAlpha = 1;
+
+    finalCtx.globalAlpha = 0.5;
+    finalCtx.drawImage(videoRef.current!, 0, 0, 500, 500);
+    finalCtx.globalAlpha = 1;
+
+
+    // Debug
+    finalCtx.fillStyle = 'blue';
+    finalCtx.fillRect(20, 0, 100, 100);
 
     // Save the current frame for next iteration
     const ctx = dummyCanvasRef.current?.getContext('2d')!;

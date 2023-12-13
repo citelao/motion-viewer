@@ -9,7 +9,7 @@ function App() {
   const animRef = React.useRef<number | null>(null);
 
   const [hasStarted, setHasStarted] = React.useState(false);
-  const [frames, setFrames] = React.useState<Uint8ClampedArray | null>(null);
+  const frames = React.useRef<Uint8ClampedArray | null>(null);
   const [test, setTest] = React.useState<number>(0);
 
   // const renderFrame = (time: number) => {
@@ -24,17 +24,20 @@ function App() {
     finalCtx.fillRect(0, 0, 100, 100);
 
     finalCtx.globalAlpha = 0.25;
-    // finalCtx.filter = 'invert(1)';
-    // finalCtx.drawImage(videoRef.current!, 0, 0);
+    finalCtx.drawImage(videoRef.current!, 0, 0);
     // console.log(frames);
-    if (frames)
+    if (frames.current)
     {
       // https://stackoverflow.com/questions/39048227/html5-canvas-invert-color-of-pixels
-      const data = frames;
-      for (var i = 0; i < data.length; i += (i % 4 === 2 ? 2 : 1)) {
-          data[i] = 255 - data[i];
+      const data = frames.current;
+      for (var i = 0; i < data.length; i += 1) {
+        if (i % 4 === 3) {
+          data[i] = 255 / 2;
+          continue;
+        }
+        data[i] = 255 - data[i];
       }
-      finalCtx.putImageData(new ImageData(frames, 500, 500), 0, 0);
+      finalCtx.putImageData(new ImageData(frames.current, 500, 500), 0, 0);
     }
     finalCtx.globalAlpha = 1;
 
@@ -43,25 +46,11 @@ function App() {
     ctx.drawImage(videoRef.current!, 0, 0, 500, 500);
     const frameData = ctx.getImageData(0, 0, 500, 500);
     const copy = Uint8ClampedArray.from(frameData.data);
-    console.log(frameData.height);
-    setFrames(copy);
-    setTest(test + 1);
-    // setTest(time);
+    frames.current = copy;
 
     animRef.current = requestAnimationFrame(renderFrame);
   };
 
-  React.useEffect(() => {
-    // animRef.current = requestAnimationFrame(renderFrame);
-    return () => {
-      if (animRef.current) {
-        cancelAnimationFrame(animRef.current);
-      }
-    };
-  });
-
-
-  // const [ctx, setCtx] = React.useState<CanvasRenderingContext2D | null>(null);
   const onStart = async () => {
     if (hasStarted) {
       return;

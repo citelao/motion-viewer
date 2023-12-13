@@ -1,3 +1,9 @@
+# Motion viewer
+
+I was inspired by [Posy's Motion Extraction](https://www.youtube.com/watch?v=NSS6yAMZF78) video.
+
+---
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

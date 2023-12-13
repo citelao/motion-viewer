@@ -27,6 +27,7 @@ function App() {
     if ((frames.current || []).length > delay.current)
     {
       // https://stackoverflow.com/questions/39048227/html5-canvas-invert-color-of-pixels
+      // TODO: https://stackoverflow.com/questions/7721898/is-putimagedata-faster-than-drawimage
       const data = frames.current[delay.current];
       for (var i = 0; i < data.length; i += (i % 4 === 2 ? 2 : 1)) {
         // if (i % 4 === 3) {
@@ -48,6 +49,7 @@ function App() {
     finalCtx.fillRect(20, 0, 100, 100);
 
     // Save the current frame for next iteration
+    // https://stackoverflow.com/questions/44218203/how-to-copy-canvas-image-data-to-some-other-variable
     const ctx = dummyCanvasRef.current?.getContext('2d')!;
     ctx.drawImage(videoRef.current!, 0, 0, 500, 500);
     const frameData = ctx.getImageData(0, 0, 500, 500);
@@ -71,6 +73,7 @@ function App() {
     ctx.fillRect(0, 0, 100, 100);
     
     // https://developer.mozilla.org/en-US/docs/Web/API/Media_Capture_and_Streams_API/Taking_still_photos
+    // https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Manipulating_video_using_canvas
     const stream = await navigator.mediaDevices
       .getUserMedia({ video: { facingMode: 'environment' }, audio: false });
     

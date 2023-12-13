@@ -7,6 +7,12 @@ function App() {
   
   const [hasStarted, setHasStarted] = React.useState(false);
 
+  const renderFrame = React.useCallback(() => {
+    const ctx = canvasRef.current?.getContext('2d')!;
+    ctx.drawImage(videoRef.current!, 0, 0, 500, 500);
+    requestAnimationFrame(renderFrame);
+  }, []);
+
   // const [ctx, setCtx] = React.useState<CanvasRenderingContext2D | null>(null);
   const onStart = React.useCallback(async () => {
     if (hasStarted) {
@@ -25,6 +31,8 @@ function App() {
     if (videoRef.current) {
       videoRef.current.srcObject = stream;
       videoRef.current.play();
+
+      requestAnimationFrame(renderFrame);
     }
   }, []);
   

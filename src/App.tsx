@@ -5,15 +5,22 @@ function App() {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const videoRef = React.useRef<HTMLVideoElement>(null);
   
+  const [hasStarted, setHasStarted] = React.useState(false);
+
   // const [ctx, setCtx] = React.useState<CanvasRenderingContext2D | null>(null);
   const onStart = React.useCallback(async () => {
+    if (hasStarted) {
+      return;
+    }
+
+    setHasStarted(true);
     const ctx = canvasRef.current?.getContext('2d')!;
     ctx.fillStyle = 'red';
     ctx.fillRect(0, 0, 100, 100);
     
     // https://developer.mozilla.org/en-US/docs/Web/API/Media_Capture_and_Streams_API/Taking_still_photos
     const stream = await navigator.mediaDevices
-    .getUserMedia({ video: true, audio: false });
+      .getUserMedia({ video: true, audio: false });
     
     if (videoRef.current) {
       videoRef.current.srcObject = stream;

@@ -1,24 +1,21 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 function App() {
+  const canvasRef = React.useRef<HTMLCanvasElement>(null);
+
+  // const [ctx, setCtx] = React.useState<CanvasRenderingContext2D | null>(null);
+  const onStart = React.useCallback(() => {
+    const ctx = canvasRef.current?.getContext('2d')!;
+    ctx.fillStyle = 'red';
+    ctx.fillRect(0, 0, 100, 100);
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Hello</h1>
+      <button onClick={onStart}>Start</button>
+      <canvas ref={canvasRef} width={500} height={500} />
     </div>
   );
 }

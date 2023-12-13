@@ -32,7 +32,7 @@ function App() {
     <div className="App">
     <h1>Hello</h1>
     <video ref={videoRef} />
-    <button onClick={onStart}>Start</button>
+    <button onClick={onStart}>{hasStarted ? "Started" : "Start"}</button>
     <canvas ref={canvasRef} width={500} height={500} />
     </div>
     );

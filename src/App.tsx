@@ -10,8 +10,7 @@ function App() {
 
   const [hasStarted, setHasStarted] = React.useState(false);
   const frames = React.useRef<Uint8ClampedArray[]>([]);
-  const delay = 2;
-  const [test, setTest] = React.useState<number>(0);
+  const delay = React.useRef<number>(2);
 
   // const renderFrame = (time: number) => {
   //   setTest(test + 5);
@@ -25,10 +24,10 @@ function App() {
     finalCtx.fillRect(0, 0, 100, 100);
 
     // console.log(frames);
-    if ((frames.current || []).length > delay)
+    if ((frames.current || []).length > delay.current)
     {
       // https://stackoverflow.com/questions/39048227/html5-canvas-invert-color-of-pixels
-      const data = frames.current[delay];
+      const data = frames.current[delay.current];
       for (var i = 0; i < data.length; i += (i % 4 === 2 ? 2 : 1)) {
         // if (i % 4 === 3) {
         //   data[i] = 20;
@@ -36,7 +35,7 @@ function App() {
         // }
         data[i] = 255 - data[i];
       }
-      finalCtx.putImageData(new ImageData(frames.current[delay], 500, 500), 0, 0);
+      finalCtx.putImageData(new ImageData(frames.current[delay.current], 500, 500), 0, 0);
     }
 
     finalCtx.globalAlpha = 0.5;
@@ -54,7 +53,7 @@ function App() {
     const frameData = ctx.getImageData(0, 0, 500, 500);
     const copy = Uint8ClampedArray.from(frameData.data);
     frames.current = [copy, ...(frames.current || [])];
-    if (frames.current.length > delay + 1) {
+    if (frames.current.length > delay.current + 1) {
       frames.current.pop();
     }
 
@@ -73,7 +72,7 @@ function App() {
     
     // https://developer.mozilla.org/en-US/docs/Web/API/Media_Capture_and_Streams_API/Taking_still_photos
     const stream = await navigator.mediaDevices
-      .getUserMedia({ video: true, audio: false });
+      .getUserMedia({ video: { facingMode: 'environment' }, audio: false });
     
     if (videoRef.current) {
       videoRef.current.srcObject = stream;
@@ -89,12 +88,18 @@ function App() {
   return (
     <div className="App">
     <h1>Hello</h1>
-    <video ref={videoRef} />
     <button onClick={onStart}>{hasStarted ? "Started" : "Start"}</button>
-    <canvas ref={dummyCanvasRef} width={500} height={500} />
 
-    <h2>final {test}</h2>
+    <input type="text" onChange={(e) => {
+      delay.current = parseInt(e.target.value);
+    }} />
+
+    <br />
+
     <canvas ref={finalCanvasRef} width={500} height={500} />
+    <h2>debug {delay.current}</h2>
+    <canvas ref={dummyCanvasRef} width={500} height={500} />
+    <video ref={videoRef} playsInline />
     </div>
     );
   }

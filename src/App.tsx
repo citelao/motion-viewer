@@ -70,7 +70,12 @@ function App() {
     
     // Final render
     const mixImage = mixCtx.getImageData(0, 0, width, height);
-    finalCtx.putImageData(mixImage, 0, 0);
+    // finalCtx.drawImage(videoRef.current!, 0, 0, width, height);
+    // finalCtx.globalCompositeOperation = 'hard-light';
+    // finalCtx.globalAlpha = 0.5;
+    finalCtx.drawImage(mixCanvasRef.current!, 0, 0, width, height);
+    // finalCtx.globalAlpha = 1;
+    // finalCtx.globalCompositeOperation = 'source-over';
 
     // Save the current frame for next iteration
     // https://stackoverflow.com/questions/44218203/how-to-copy-canvas-image-data-to-some-other-variable

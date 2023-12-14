@@ -17,11 +17,25 @@ function App() {
   // };
 
   const renderFrame = (time: number) => {
+    // Adjust the width & height to the actual video size
+    const width = videoRef.current!.videoWidth || 100;
+    const height = videoRef.current!.videoHeight || 100;
+    dummyCanvasRef.current!.width = width;
+    dummyCanvasRef.current!.height = height;
+    finalCanvasRef.current!.width = width;
+    finalCanvasRef.current!.height = height;
+    console.log(width, height);
+
     const finalCtx = finalCanvasRef.current?.getContext('2d')!;
 
     // Debug
     finalCtx.fillStyle = 'red';
     finalCtx.fillRect(0, 0, 100, 100);
+
+    if (!videoRef.current!.videoWidth) {
+      animRef.current = requestAnimationFrame(renderFrame);
+      return;
+    }
 
     // console.log(frames);
     if ((frames.current || []).length > delay.current)
@@ -36,11 +50,12 @@ function App() {
         // }
         data[i] = 255 - data[i];
       }
-      finalCtx.putImageData(new ImageData(frames.current[delay.current], 500, 500), 0, 0);
+      finalCtx.putImageData(new ImageData(frames.current[delay.current], width, height), 0, 0);
     }
 
+    // Draw to the video's size
     finalCtx.globalAlpha = 0.5;
-    finalCtx.drawImage(videoRef.current!, 0, 0, 500, 500);
+    finalCtx.drawImage(videoRef.current!, 0, 0, width, height);
     finalCtx.globalAlpha = 1;
 
     // Debug
@@ -50,8 +65,8 @@ function App() {
     // Save the current frame for next iteration
     // https://stackoverflow.com/questions/44218203/how-to-copy-canvas-image-data-to-some-other-variable
     const ctx = dummyCanvasRef.current?.getContext('2d')!;
-    ctx.drawImage(videoRef.current!, 0, 0, 500, 500);
-    const frameData = ctx.getImageData(0, 0, 500, 500);
+    ctx.drawImage(videoRef.current!, 0, 0, width, height);
+    const frameData = ctx.getImageData(0, 0, width, height);
     const copy = Uint8ClampedArray.from(frameData.data);
     frames.current = [copy, ...(frames.current || [])];
     if (frames.current.length > delay.current + 1) {
@@ -67,6 +82,7 @@ function App() {
     }
 
     setHasStarted(true);
+
     const ctx = dummyCanvasRef.current?.getContext('2d')!;
     ctx.fillStyle = 'red';
     ctx.fillRect(0, 0, 100, 100);
@@ -75,7 +91,7 @@ function App() {
     // https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Manipulating_video_using_canvas
     const stream = await navigator.mediaDevices
       .getUserMedia({ video: { facingMode: 'environment' }, audio: false });
-    
+
     if (videoRef.current) {
       videoRef.current.srcObject = stream;
       videoRef.current.play();

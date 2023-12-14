@@ -29,7 +29,12 @@ function App() {
     const finalCtx = finalCanvasRef.current?.getContext('2d')!;
 
     // Debug
-    finalCtx.fillStyle = 'red';
+    //
+    // A nice pretty, pale, non-default blue as we load
+    //
+    // BTW I used this comment to try to get Copilot to generate a nice color,
+    // but it refused.
+    finalCtx.fillStyle = '#374f60';
     finalCtx.fillRect(0, 0, 100, 100);
 
     if (!videoRef.current!.videoWidth) {

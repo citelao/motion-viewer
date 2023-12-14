@@ -74,7 +74,7 @@ function App() {
     mixCtx.globalAlpha = 1;
     
     // Final render
-    const mixImage = mixCtx.getImageData(0, 0, width, height);
+    // const mixImage = mixCtx.getImageData(0, 0, width, height);
     // finalCtx.globalAlpha = 0.5;
     // finalCtx.filter = 'blur(5px) contrast(2.5)';
     finalCtx.drawImage(mixCanvasRef.current!, 0, 0, width, height);

@@ -3,6 +3,7 @@ import './App.css';
 
 function App() {
   const dummyCanvasRef = React.useRef<HTMLCanvasElement>(null);
+  const mixCanvasRef = React.useRef<HTMLCanvasElement>(null);
   const finalCanvasRef = React.useRef<HTMLCanvasElement>(null);
   const videoRef = React.useRef<HTMLVideoElement>(null);
   
@@ -22,6 +23,8 @@ function App() {
     const height = videoRef.current!.videoHeight || 100;
     dummyCanvasRef.current!.width = width;
     dummyCanvasRef.current!.height = height;
+    mixCanvasRef.current!.width = width;
+    mixCanvasRef.current!.height = height;
     finalCanvasRef.current!.width = width;
     finalCanvasRef.current!.height = height;
     console.log(width, height);
@@ -42,6 +45,8 @@ function App() {
       return;
     }
 
+    const mixCtx = mixCanvasRef.current?.getContext('2d')!;
+
     // console.log(frames);
     if ((frames.current || []).length > delay.current)
     {
@@ -55,17 +60,17 @@ function App() {
         // }
         data[i] = 255 - data[i];
       }
-      finalCtx.putImageData(new ImageData(frames.current[delay.current], width, height), 0, 0);
+      mixCtx.putImageData(new ImageData(frames.current[delay.current], width, height), 0, 0);
     }
 
     // Draw to the video's size
-    finalCtx.globalAlpha = 0.5;
-    finalCtx.drawImage(videoRef.current!, 0, 0, width, height);
-    finalCtx.globalAlpha = 1;
-
-    // Debug
-    // finalCtx.fillStyle = 'blue';
-    // finalCtx.fillRect(20, 0, 100, 100);
+    mixCtx.globalAlpha = 0.5;
+    mixCtx.drawImage(videoRef.current!, 0, 0, width, height);
+    mixCtx.globalAlpha = 1;
+    
+    // Final render
+    const mixImage = mixCtx.getImageData(0, 0, width, height);
+    finalCtx.putImageData(mixImage, 0, 0);
 
     // Save the current frame for next iteration
     // https://stackoverflow.com/questions/44218203/how-to-copy-canvas-image-data-to-some-other-variable
@@ -134,6 +139,7 @@ function App() {
         <h2>Current delay: {delay.current}</h2>
         <canvas ref={dummyCanvasRef} width={500} height={500} />
         <video ref={videoRef} playsInline />
+        <canvas ref={mixCanvasRef} width={500} height={500} />
       </details>
     </div>
     );

@@ -93,8 +93,8 @@ function App() {
       <canvas ref={finalCanvasRef} className="mainCanvas" width={500} height={500} />
 
       <section className="controls">
-        <h1>Hello</h1>
-        <p>Use your camera<br /> to detect motion:</p>
+        <h1>Hello!</h1>
+        <p>Use your camera to detect motion:</p>
         <button className="startButton" onClick={onStart}>{hasStarted ? "Started" : "Start"}</button>
         
         <label htmlFor="delay">Delay</label>

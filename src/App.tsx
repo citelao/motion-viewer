@@ -99,9 +99,13 @@ function App() {
     <br />
 
     <canvas ref={finalCanvasRef} width={500} height={500} />
-    <h2>debug {delay.current}</h2>
-    <canvas ref={dummyCanvasRef} width={500} height={500} />
-    <video ref={videoRef} playsInline />
+
+    <details>
+      <summary>Debug</summary>
+      <h2>Current delay: {delay.current}</h2>
+      <canvas ref={dummyCanvasRef} width={500} height={500} />
+      <video ref={videoRef} playsInline />
+    </details>
     </div>
     );
   }

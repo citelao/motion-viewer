@@ -90,15 +90,13 @@ function App() {
   return (
     <div className="App">
     <h1>Hello</h1>
-    <button onClick={onStart}>{hasStarted ? "Started" : "Start"}</button>
+    <button className="startButton" onClick={onStart}>{hasStarted ? "Started" : "Start"}</button>
 
     <input type="text" onChange={(e) => {
       delay.current = parseInt(e.target.value);
     }} />
 
-    <br />
-
-    <canvas ref={finalCanvasRef} width={500} height={500} />
+    <canvas ref={finalCanvasRef} className="mainCanvas" width={500} height={500} />
 
     <details>
       <summary>Debug</summary>

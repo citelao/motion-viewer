@@ -1,6 +1,9 @@
 import React from 'react';
 import './App.css';
 
+type State = "not-started" | "loading" | "started";
+
+
 function App() {
   const dummyCanvasRef = React.useRef<HTMLCanvasElement>(null);
   const mixCanvasRef = React.useRef<HTMLCanvasElement>(null);
@@ -9,7 +12,7 @@ function App() {
   
   const animRef = React.useRef<number | null>(null);
 
-  const [hasStarted, setHasStarted] = React.useState(false);
+  const [state, setState] = React.useState<State>("not-started");
   const frames = React.useRef<Uint8ClampedArray[]>([]);
   const delay = React.useRef<number>(2);
 
@@ -44,6 +47,8 @@ function App() {
       animRef.current = requestAnimationFrame(renderFrame);
       return;
     }
+
+    setState("started");
 
     const mixCtx = mixCanvasRef.current?.getContext('2d')!;
 
@@ -94,11 +99,11 @@ function App() {
   };
 
   const onStart = async () => {
-    if (hasStarted) {
+    if (state !== "not-started") {
       return;
     }
 
-    setHasStarted(true);
+    setState("loading");
 
     const ctx = dummyCanvasRef.current?.getContext('2d')!;
     ctx.fillStyle = 'red';
@@ -126,13 +131,13 @@ function App() {
       <canvas ref={finalCanvasRef} className="mainCanvas" width={500} height={500} />
 
       <section className="controls">
-        {(!hasStarted) &&
+        {(state !== "started") &&
         <>
           <h1>Hello!</h1>
           <p>Use your camera to detect motion:</p>
+          <button className="startButton" onClick={onStart}>{(state === "not-started") ? "Start" : "Starting"}</button>
         </>
         }
-        <button className="startButton" onClick={onStart}>{hasStarted ? "Started" : "Start"}</button>
         
         <label htmlFor="delay">Delay</label>
         <input type="text" id="delay" onChange={(e) => {

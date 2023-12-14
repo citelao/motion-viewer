@@ -89,21 +89,27 @@ function App() {
   
   return (
     <div className="App">
-    <h1>Hello</h1>
-    <button className="startButton" onClick={onStart}>{hasStarted ? "Started" : "Start"}</button>
 
-    <input type="text" onChange={(e) => {
-      delay.current = parseInt(e.target.value);
-    }} />
+      <canvas ref={finalCanvasRef} className="mainCanvas" width={500} height={500} />
 
-    <canvas ref={finalCanvasRef} className="mainCanvas" width={500} height={500} />
+      <section className="controls">
+        <h1>Hello</h1>
+        <p>Use your camera<br /> to detect motion:</p>
+        <button className="startButton" onClick={onStart}>{hasStarted ? "Started" : "Start"}</button>
+        
+        <label htmlFor="delay">Delay</label>
+        <input type="text" id="delay" onChange={(e) => {
+          delay.current = parseInt(e.target.value);
+        }} placeholder={delay.current.toString()} />
+      </section>
 
-    <details>
-      <summary>Debug</summary>
-      <h2>Current delay: {delay.current}</h2>
-      <canvas ref={dummyCanvasRef} width={500} height={500} />
-      <video ref={videoRef} playsInline />
-    </details>
+
+      <details>
+        <summary>Debug</summary>
+        <h2>Current delay: {delay.current}</h2>
+        <canvas ref={dummyCanvasRef} width={500} height={500} />
+        <video ref={videoRef} playsInline />
+      </details>
     </div>
     );
   }
